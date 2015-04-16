@@ -1,0 +1,145 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.30.4.8167/W32 for ARM        15/Apr/2015  13:45:51
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c
+#    Command line =  
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c
+#        -D NRF51 -D NUZZLE_COLLAR_PROTO_1 -D BLE_STACK_SUPPORT_REQD -D S110 -D
+#        SPI_MASTER_0_ENABLE -D ACCELEROMETER_ENABLE -lCN
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\Debug\List\
+#        --diag_suppress Pe301,Pa082 -o
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\Debug\Obj\
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\..\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\..\pca10028\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\..\devices\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\gpiote\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\scheduler\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\
+#        -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\CMSIS\Include\" -On
+#    List file    =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\Debug\List\nrf_delay.lst
+#    Object file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\SPI_TESTS\SPI_POLLING\pca10028\Debug\Obj\nrf_delay.o
+#
+###############################################################################
+
+E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c
+      1          /* Copyright (c) 2012 Nordic Semiconductor. All Rights Reserved.
+      2           *
+      3           * The information contained herein is property of Nordic Semiconductor ASA.
+      4           * Terms and conditions of usage are described in detail in NORDIC
+      5           * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+      6           *
+      7           * Licensees are granted free, non-transferable use of the information. NO
+      8           * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
+      9           * the file.
+     10           *
+     11           */
+     12           
+     13          #include <stdio.h> 
+     14          #include "compiler_abstraction.h"
+     15          #include "nrf.h"
+     16          #include "nrf_delay.h"
+
+   \                                 In section .text, align 4, keep-with-next
+   \   static __interwork __softfp void nrf_delay_us(uint32_t volatile)
+   \                     nrf_delay_us: (+1)
+   \   00000000   0xB401             PUSH     {R0}
+   \                     ??loop: (+1)
+   \   00000002   0x1E40             SUBS R0, R0, #1
+   \   00000004   0xBF00             NOP
+   \   00000006   0xBF00             NOP
+   \   00000008   0xBF00             NOP
+   \   0000000A   0xBF00             NOP
+   \   0000000C   0xBF00             NOP
+   \   0000000E   0xBF00             NOP
+   \   00000010   0xBF00             NOP
+   \   00000012   0xBF00             NOP
+   \   00000014   0xBF00             NOP
+   \   00000016   0xBF00             NOP
+   \   00000018   0xBF00             NOP
+   \   0000001A   0xBF00             NOP
+   \   0000001C   0xD1F1             BNE ??loop
+   \   0000001E   0xB001             ADD      SP,SP,#+4
+   \   00000020   0x4770             BX       LR               ;; return
+     17          
+     18          /*lint --e{438} "Variable not used" */
+
+   \                                 In section .text, align 2, keep-with-next
+     19          void nrf_delay_ms(uint32_t volatile number_of_ms)
+     20          {
+   \                     nrf_delay_ms: (+1)
+   \   00000000   0xB501             PUSH     {R0,LR}
+     21              while(number_of_ms != 0)
+   \                     ??nrf_delay_ms_0: (+1)
+   \   00000002   0x9800             LDR      R0,[SP, #+0]
+   \   00000004   0x2800             CMP      R0,#+0
+   \   00000006   0xD006             BEQ      ??nrf_delay_ms_1
+     22              {
+     23                  number_of_ms--;
+   \   00000008   0x9800             LDR      R0,[SP, #+0]
+   \   0000000A   0x1E40             SUBS     R0,R0,#+1
+   \   0000000C   0x9000             STR      R0,[SP, #+0]
+     24                  nrf_delay_us(999);
+   \   0000000E   0x....             LDR      R0,??DataTable0  ;; 0x3e7
+   \   00000010   0x.... 0x....      BL       nrf_delay_us
+   \   00000014   0xE7F5             B        ??nrf_delay_ms_0
+     25              }
+     26          }
+   \                     ??nrf_delay_ms_1: (+1)
+   \   00000016   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x000003E7         DC32     0x3e7
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   nrf_delay_ms
+         8   -> nrf_delay_us
+       4   nrf_delay_us
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+      24  nrf_delay_ms
+      34  nrf_delay_us
+
+ 
+ 62 bytes in section .text
+ 
+ 62 bytes of CODE memory
+
+Errors: none
+Warnings: none

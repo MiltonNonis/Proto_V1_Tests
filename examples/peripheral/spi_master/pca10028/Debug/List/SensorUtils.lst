@@ -1,0 +1,251 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.30.4.8167/W32 for ARM        14/Apr/2015  23:15:55
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\devices\SensorUtils.c
+#    Command line =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\devices\SensorUtils.c
+#        -D NRF51 -D BOARD_PCA10028 -D BLE_STACK_SUPPORT_REQD -D S110 -D
+#        SPI_MASTER_0_ENABLE -D ACCELEROMETER_ENABLE -lCN
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\
+#        --diag_suppress Pe301,Pa082 -o
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\pca10028\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\devices\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\gpiote\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\scheduler\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\
+#        -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\CMSIS\Include\" -On
+#    List file    =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\SensorUtils.lst
+#    Object file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\SensorUtils.o
+#
+###############################################################################
+
+E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\devices\SensorUtils.c
+      1          /*****************************************************************************
+      2           *  File name : SensorUtils.c
+      3           *  Desc      : Nuzzle Collar Sensor Driver support utility functions.
+      4           *              This driver code implementation is generic for all sensors on Collar.
+      5           *  Dates : 03/22/15 - 04/13/15
+      6           *        - Milton Nonis
+      7           * Copyright (c) Nuzzle, Inc. 2015
+      8           * All rights reserved. This code is Livescribe, Inc proprietary and confidential, 
+      9           * and may be protected by patents. Any use of the code for whatever purpose is
+     10           * subject to separate license terms and conditions.
+     11           *************************************************************************/
+     12          #include <stdio.h>
+     13          #include <string.h> 
+     14          
+     15          #include "nrf_error.h"
+     16          
+     17          #if defined(NUZZLE_COLLAR_PROTO_1) || defined(BOARD_PCA10028)
+     18          
+     19          #include "spi_5W_master.h"
+     20          
+     21          //#include "spi_master_if.h"
+     22          
+     23          //#include "st_lis3dh.h"
+     24          #include "SensorUtils.h"
+     25          //#include "NZL_CollarAppEvents.h"
+     26          
+     27          #if 0
+     28          #if defined(ACCELEROMETER_ENABLE)
+     29          
+     30          
+     31          /*
+     32           *  Notes:
+     33           *   1. The read/write buffer sizes need to be fine tuned later. TODO: 03/31/15 - MN
+     34           * 
+     35           *
+     36           */
+     37          #define MAX_ACCEL_WRITE_BUFF_SIZE	(10) 
+     38          #define MAX_ACCEL_READ_BUFF_SIZE        (20) 
+     39          
+     40          uint8_t		AccelWriteBuff[MAX_ACCEL_WRITE_BUFF_SIZE];
+     41          uint8_t     AccelReadBuff[MAX_ACCEL_READ_BUFF_SIZE];
+     42          
+     43          
+     44          
+     45          // LIS3DH SPI flags for read/write and auto increment for multi-register reads
+     46          #define LIS3DH_SPI_READ_FLAG			(0x80)
+     47          #define LIS3DH_SPI_AUTO_INCREMENT_ADRR_FLAG	(0x40)
+     48          
+     49          
+     50          /*
+     51           * Notes:
+     52           * 1. Use a typical sized global write buffer to minimize malloc/free call overhead
+     53           *    If required write buffer is longer than
+     54           *
+     55           * 2. Need a separate similar function for Accel data fetches from FIFO,
+     56           *    AccelReadDataFifo().
+     57           *    Here, register address will not be auto-incremented and also bit-alignment of 10-bit values
+     58           *    may be useful to do here. Verify this and implement. TODO: 03/25/15 - MN 
+     59           */ 
+     60          NZL_Return_t	AccelReadReg( uint8_t startReg, uint8_t numRegs, uint8_t *pReadBuff)
+     61          {
+     62              NZL_Return_t    retStat = NZL_RET_SUCCESS;
+     63          
+     64          //	uint8_t		txBuff[2];
+     65          	uint32_t	spiStat;
+     66          
+     67          	// Setup Tx and Rx buffers
+     68          	// Setup read flag and auto-increment address, if reading multiple registers
+     69              AccelWriteBuff[0] = startReg | LIS3DH_SPI_READ_FLAG | 
+     70                                  numRegs > 1 ? LIS3DH_SPI_AUTO_INCREMENT_ADRR_FLAG: 0x00;
+     71          
+     72          //	txBuff[0] = startReg | LIS3DH_SPI_READ_FLAG | 
+     73          //	 			numRegs > 1 ? LIS3DH_SPI_AUTO_INCREMENT_ADRR_FLAG: 0x00;
+     74          
+     75          	if ((spiStat = spi_master_send_recv(ACCEL_SPI_BUS, AccelWriteBuff, 1, pReadBuff, numRegs)) != NRF_SUCCESS)
+     76          	{
+     77          		D(printf("LIS3DH SPI ReadReg() error: %d!\n", spiStat));
+     78                  retStat = NZL_RET_ERROR;
+     79          	}
+     80          
+     81              return(retStat);
+     82          
+     83           
+     84          }
+     85          #endif  // defined(ACCELEROMETER_ENABLE)
+     86          
+     87          
+     88          #if 0
+     89          /*
+     90           * SPI Slave Device Interface API called by device drivers specific to slave device
+     91           */
+     92          /*
+     93           * SPI device interface calls.
+     94           * -- Move to AccelDrvr.c/.h
+     95           */
+     96          #if defined(ACCELEROMETER_ENABLE)
+     97          //spi_master_config_t     accelSpiConfig = ACCEL_SPI_MASTER_CONFIG
+     98          void SPI_AccelIfInit( void )
+     99          {
+    100              // spi_master_config_t     accelSpiConfig;
+    101              spi_master_config_t     accelSpiConfig = ACCEL_SPI_MASTER_CONFIG;
+    102              
+    103          #if 0    
+    104              accelSpiConfig.SPI_Freq         = SPI_FREQUENCY_FREQUENCY_M1;
+    105              accelSpiConfig.SPI_Pin_SCK      = ACCEL_SPI_SCK_PIN;
+    106              accelSpiConfig.SPI_Pin_MISO     = ACCEL_SPI_MISO_PIN;
+    107              accelSpiConfig.SPI_Pin_MOSI     = ACCEL_SPI_MOSI_PIN;
+    108          //    accelSpiConfig.SPI_Pin_SS       = ACCEL_SPI_SS_PIN;
+    109              accelSpiConfig.SPI_Pin_SS       =  ACCEL_SPI_SS_PIN;                // 8u;
+    110              accelSpiConfig.SPI_ORDER        = SPI_CONFIG_ORDER_MsbFirst;
+    111              accelSpiConfig.SPI_CPOL         = SPI_CONFIG_CPOL_ActiveHigh;
+    112              accelSpiConfig.SPI_CPHA         = SPI_CONFIG_CPHA_Leading;
+    113          #endif
+    114          
+    115              // Intialize & configure the SPI master module and bus interface signals, associated event handler
+    116              SpiMasterInit(ACCEL_SPI_BUS, SpiMasterAccelEventHandler, &accelSpiConfig);
+    117          
+    118          
+    119          }
+    120          
+    121          #endif  // defined(ACCELEROMETER_ENABLE)
+    122          
+    123          
+    124          
+    125          /*
+    126           * -- Move to AccelDrvr.c/.h
+    127           * Check Accel sensor interface/availability
+    128           * - Read WHO_AM_I reg and verify for LIS3DH.
+    129           * if available/passed
+    130           *    Perform Accel default initialization
+    131           *   
+    132           * else
+    133           *   return NZL_DEV_ERR_ACCEL_NOT_AVAIL
+    134           * endif
+    135           * if success
+    136           *
+    137           *   Set Accel Sensor status flags
+    138           * else
+    139           *   Disable and power off SPI_AccelInterface and bus
+    140           *   Set Accel Sensor status flags
+    141           * endif
+    142          
+    143            - Do not check for bus availability, init status etc for now.
+    144              These would be defined/setup in AccelSensorStatus struct TBD. TODO: 03/24/15 - MN
+    145          
+    146          
+    147           */
+    148          
+    149          /*
+    150           *  Notes:
+    151           *  1. The readBuff[] size needs to be at least one byte larger than the number of bytes expected
+    152           *     to receive, since the first byte is always a 'dummy' byte to discard.
+    153           *  2. Make the readBuff[] a local for now. Could use a global, if more efficient. TODO: 03/25/15 - MN
+    154           *  3. When doing FIFO reads of large sample sets, do a malloc() for the required size for the 
+    155           *     duration of the processing and free up at end.
+    156           *  4. AccelSensorInit() will be called multiple times by MotionSense_SM()
+    157           *     until AccelSensorInit() reports that ACCEL_SENSOR_INIT_SUCCESS.
+    158           *  5. AccelSensorInit() will be called twice for accel sensor access SPI transfer
+    159           *     
+    160           *     
+    161           */
+    162          NZL_Return_t    AccelSensorInit( void )
+    163          {
+    164              NZL_Return_t    retStat = NZL_RET_SUCCESS;
+    165              uint8_t         readBuff[2];
+    166              
+    167          
+    168              memset(AccelReadBuff,0x00, sizeof(AccelReadBuff));
+    169              // Read ID reg and verify
+    170              AccelReadReg((uint8_t)LIS3DH_WHOAMI_REG, 1, AccelReadBuff);
+    171              // Note: Since we are doing a non-blocking call completed through multiple interrupt handler calls
+    172              //       we cannot check for read results yet. It needs to be done in the BSP events loop, when we
+    173              //       get a SPI TRANSFER COMPLETED event is received.
+    174              //       This needs to be tied to the sensor data read state logic. TODO. 03/31/15 - MN
+    175          //    if (readBuff[1] != LIS3DH_WHOAMI_VAL)
+    176          //        return(NZL_DEV_ERR_ACCEL_NOT_AVAIL);
+    177          
+    178          
+    179          
+    180              return(retStat);
+    181          }
+    182          
+    183          #endif  // #if defined(NUZZLE_COLLAR_PROTO_1)  || defined(BOARD_PCA10028)
+    184          
+    185          void AccelSensor_SM(void *pEventData, uint16_t eDatSize)
+    186          {
+    187          
+    188          }
+    189          #endif
+    190          #endif
+
+
+ 
+
+ 
+
+
+Errors: none
+Warnings: none

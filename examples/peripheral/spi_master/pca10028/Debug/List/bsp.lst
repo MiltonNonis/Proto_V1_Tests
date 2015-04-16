@@ -1,0 +1,741 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.30.4.8167/W32 for ARM        14/Apr/2015  23:15:54
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\bsp.c
+#    Command line =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\bsp.c
+#        -D NRF51 -D BOARD_PCA10028 -D BLE_STACK_SUPPORT_REQD -D S110 -D
+#        SPI_MASTER_0_ENABLE -D ACCELEROMETER_ENABLE -lCN
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\
+#        --diag_suppress Pe301,Pa082 -o
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\pca10028\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\devices\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\gpiote\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\scheduler\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\
+#        -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\CMSIS\Include\" -On
+#    List file    =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\bsp.lst
+#    Object file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\bsp.o
+#
+###############################################################################
+
+E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\bsp.c
+      1          /* Copyright (c) 2014 Nordic Semiconductor. All Rights Reserved.
+      2           *
+      3           * The information contained herein is property of Nordic Semiconductor ASA.
+      4           * Terms and conditions of usage are described in detail in NORDIC
+      5           * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+      6           *
+      7           * Licensees are granted free, non-transferable use of the information. NO
+      8           * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
+      9           * the file.
+     10           *
+     11           */
+     12          
+     13          #include "bsp.h"
+     14          #include <stddef.h>
+     15          #include <stdio.h>
+     16          #include "nordic_common.h"
+     17          #include "nrf.h"
+     18          #include "nrf_gpio.h"
+     19          #include "nrf_error.h"
+     20          
+     21          #ifndef BSP_SIMPLE
+     22          #include "app_timer.h"
+     23          #include "app_gpiote.h"
+     24          //////#include "app_button.h"
+     25          #endif // BSP_SIMPLE
+     26          
+     27          #define ADVERTISING_LED_ON_INTERVAL            200
+     28          #define ADVERTISING_LED_OFF_INTERVAL           1800
+     29          
+     30          #define ADVERTISING_DIRECTED_LED_ON_INTERVAL   200
+     31          #define ADVERTISING_DIRECTED_LED_OFF_INTERVAL  200
+     32          
+     33          #define ADVERTISING_WHITELIST_LED_ON_INTERVAL  200
+     34          #define ADVERTISING_WHITELIST_LED_OFF_INTERVAL 800
+     35          
+     36          #define ADVERTISING_SLOW_LED_ON_INTERVAL       400
+     37          #define ADVERTISING_SLOW_LED_OFF_INTERVAL      4000
+     38          
+     39          #define BONDING_INTERVAL                       100
+     40          
+     41          #define SENT_OK_INTERVAL                       100
+     42          #define SEND_ERROR_INTERVAL                    500
+     43          
+     44          #define RCV_OK_INTERVAL                        100
+     45          #define RCV_ERROR_INTERVAL                     500
+     46          
+     47          #define ALERT_INTERVAL                         200
+     48          
+     49          #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+     50          static bsp_indication_t m_stable_state        = BSP_INDICATE_IDLE;
+     51          static uint32_t         m_app_ticks_per_100ms = 0;
+     52          static uint32_t         m_indication_type     = 0;
+     53          static app_timer_id_t   m_leds_timer_id;
+     54          static app_timer_id_t   m_alert_timer_id;
+     55          #endif // LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+     56          
+     57          #if BUTTONS_NUMBER > 0
+     58          #ifndef BSP_SIMPLE
+     59          static bsp_event_callback_t m_registered_callback         = NULL;
+     60          static bsp_event_t          m_events_list[BUTTONS_NUMBER] = {BSP_EVENT_NOTHING};
+     61          
+     62          static void bsp_button_event_handler(uint8_t pin_no, uint8_t button_action);
+     63          #endif // BSP_SIMPLE
+     64          
+     65          static const uint32_t m_buttons_list[BUTTONS_NUMBER] = BUTTONS_LIST;
+     66          
+     67          #ifndef BSP_SIMPLE
+     68          static const app_button_cfg_t app_buttons[BUTTONS_NUMBER] =
+     69          {
+     70              #ifdef BSP_BUTTON_0
+     71              {BSP_BUTTON_0, false, BUTTON_PULL, bsp_button_event_handler},
+     72              #endif // BUTTON_0
+     73          
+     74              #ifdef BSP_BUTTON_1
+     75              {BSP_BUTTON_1, false, BUTTON_PULL, bsp_button_event_handler},
+     76              #endif // BUTTON_1
+     77          
+     78              #ifdef BSP_BUTTON_2
+     79              {BSP_BUTTON_2, false, BUTTON_PULL, bsp_button_event_handler},
+     80              #endif // BUTTON_2
+     81          
+     82              #ifdef BSP_BUTTON_3
+     83              {BSP_BUTTON_3, false, BUTTON_PULL, bsp_button_event_handler},
+     84              #endif // BUTTON_3
+     85          
+     86              #ifdef BSP_BUTTON_4
+     87              {BSP_BUTTON_4, false, BUTTON_PULL, bsp_button_event_handler},
+     88              #endif // BUTTON_4
+     89          
+     90              #ifdef BSP_BUTTON_5
+     91              {BSP_BUTTON_5, false, BUTTON_PULL, bsp_button_event_handler},
+     92              #endif // BUTTON_5
+     93          
+     94              #ifdef BSP_BUTTON_6
+     95              {BSP_BUTTON_6, false, BUTTON_PULL, bsp_button_event_handler},
+     96              #endif // BUTTON_6
+     97          
+     98              #ifdef BSP_BUTTON_7
+     99              {BSP_BUTTON_7, false, BUTTON_PULL, bsp_button_event_handler},
+    100              #endif // BUTTON_7
+    101          };
+    102          #endif // BSP_SIMPLE
+    103          #endif // BUTTONS_NUMBER > 0
+    104          
+    105          #define BSP_MS_TO_TICK(MS) (m_app_ticks_per_100ms * (MS / 100))
+    106          
+    107          #ifdef BSP_LED_2_MASK
+    108          #define ALERT_LED_MASK BSP_LED_2_MASK
+    109          #else
+    110          #define ALERT_LED_MASK BSP_LED_1_MASK
+    111          #endif // LED_2_MASK
+    112          
+
+   \                                 In section .text, align 2, keep-with-next
+    113          uint32_t bsp_buttons_state_get(uint32_t * p_buttons_state)
+    114          {
+   \                     bsp_buttons_state_get: (+1)
+   \   00000000   0x0001             MOVS     R1,R0
+    115              uint32_t result = NRF_SUCCESS;
+   \   00000002   0x2000             MOVS     R0,#+0
+    116          
+    117              *p_buttons_state = 0;
+   \   00000004   0x2200             MOVS     R2,#+0
+   \   00000006   0x600A             STR      R2,[R1, #+0]
+    118          #if BUTTONS_NUMBER > 0
+    119              uint32_t buttons = ~NRF_GPIO->IN;
+    120              uint32_t cnt;
+    121          
+    122              for (cnt = 0; cnt < BUTTONS_NUMBER; cnt++)
+    123              {
+    124                  if (buttons & (1 << m_buttons_list[cnt]))
+    125                  {
+    126                      *p_buttons_state |= 1 << cnt;
+    127                  }
+    128              }
+    129          #endif // BUTTONS_NUMBER > 0
+    130          
+    131              return result;
+   \   00000008   0x4770             BX       LR               ;; return
+    132          }
+    133          
+    134          
+
+   \                                 In section .text, align 2, keep-with-next
+    135          uint32_t bsp_button_is_pressed(uint32_t button, bool * p_state){
+   \                     bsp_button_is_pressed: (+1)
+   \   00000000   0x0002             MOVS     R2,R0
+    136          
+    137              uint32_t result;
+    138          
+    139          #if BUTTONS_NUMBER > 0
+    140              if(button < BUTTONS_NUMBER)
+    141                  {
+    142                      uint32_t buttons = ~NRF_GPIO->IN;
+    143                      result = NRF_SUCCESS;
+    144                      *p_state = (buttons & (1 << m_buttons_list[button])) ? true : false;
+    145                  }
+    146                  else
+    147                  {
+    148                      result = NRF_ERROR_INVALID_PARAM;
+    149                  }
+    150          
+    151          #else
+    152                  result = NRF_ERROR_INVALID_PARAM;
+   \   00000002   0x2307             MOVS     R3,#+7
+   \   00000004   0x0018             MOVS     R0,R3
+    153          #endif // BUTTONS_NUMBER > 0
+    154              return result;
+   \   00000006   0x4770             BX       LR               ;; return
+    155          }
+    156          
+    157          
+    158          #if (BUTTONS_NUMBER > 0) && !(defined BSP_SIMPLE)
+    159          /**@brief Function for handling button events.
+    160           *
+    161           * @param[in]   pin_no          The pin number of the button pressed.
+    162           * @param[in]   button_action   Action button.
+    163           */
+    164          static void bsp_button_event_handler(uint8_t pin_no, uint8_t button_action)
+    165          {
+    166              bsp_event_t event  = BSP_EVENT_NOTHING;
+    167              uint32_t    button = 0;
+    168          
+    169              if ((button_action == APP_BUTTON_PUSH) && (m_registered_callback != NULL))
+    170              {
+    171                  while ((button < BUTTONS_NUMBER) && (m_buttons_list[button] != pin_no))
+    172                  {
+    173                      button++;
+    174                  }
+    175          
+    176                  if (button < BUTTONS_NUMBER)
+    177                  {
+    178                      event = m_events_list[button];
+    179                  }
+    180          
+    181                  if (event != BSP_EVENT_NOTHING)
+    182                  {
+    183                      m_registered_callback(event);
+    184                  }
+    185              }
+    186          }
+    187          
+    188          
+    189          #endif // (BUTTONS_NUMBER > 0) && !(defined BSP_SIMPLE)
+    190          
+    191          #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    192          /**@brief       Configure leds to indicate required state.
+    193           * @param[in]   indicate   State to be indicated.
+    194           */
+    195          static uint32_t bsp_led_indication(bsp_indication_t indicate)
+    196          {
+    197              uint32_t err_code   = NRF_SUCCESS;
+    198              uint32_t next_delay = 0;
+    199          
+    200              switch (indicate)
+    201              {
+    202                  case BSP_INDICATE_IDLE:
+    203                      LEDS_OFF(LEDS_MASK & ~ALERT_LED_MASK);
+    204                      m_stable_state = indicate;
+    205                      break;
+    206          
+    207                  case BSP_INDICATE_SCANNING:
+    208                  case BSP_INDICATE_ADVERTISING:
+    209                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    210          
+    211                      // in advertising blink LED_0
+    212                      if (LED_IS_ON(BSP_LED_0_MASK))
+    213                      {
+    214                          LEDS_OFF(BSP_LED_0_MASK);
+    215                          next_delay = indicate ==
+    216                                       BSP_INDICATE_ADVERTISING ? ADVERTISING_LED_OFF_INTERVAL :
+    217                                       ADVERTISING_SLOW_LED_OFF_INTERVAL;
+    218                      }
+    219                      else
+    220                      {
+    221                          LEDS_ON(BSP_LED_0_MASK);
+    222                          next_delay = indicate ==
+    223                                       BSP_INDICATE_ADVERTISING ? ADVERTISING_LED_ON_INTERVAL :
+    224                                       ADVERTISING_SLOW_LED_ON_INTERVAL;
+    225                      }
+    226          
+    227                      m_stable_state = indicate;
+    228                      err_code       = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(next_delay), NULL);
+    229                      break;
+    230          
+    231                  case BSP_INDICATE_ADVERTISING_WHITELIST:
+    232                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    233          
+    234                      // in advertising quickly blink LED_0
+    235                      if (LED_IS_ON(BSP_LED_0_MASK))
+    236                      {
+    237                          LEDS_OFF(BSP_LED_0_MASK);
+    238                          next_delay = indicate ==
+    239                                       BSP_INDICATE_ADVERTISING_WHITELIST ?
+    240                                       ADVERTISING_WHITELIST_LED_OFF_INTERVAL :
+    241                                       ADVERTISING_SLOW_LED_OFF_INTERVAL;
+    242                      }
+    243                      else
+    244                      {
+    245                          LEDS_ON(BSP_LED_0_MASK);
+    246                          next_delay = indicate ==
+    247                                       BSP_INDICATE_ADVERTISING_WHITELIST ?
+    248                                       ADVERTISING_WHITELIST_LED_ON_INTERVAL :
+    249                                       ADVERTISING_SLOW_LED_ON_INTERVAL;
+    250                      }
+    251                      m_stable_state = indicate;
+    252                      err_code       = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(next_delay), NULL);
+    253                      break;
+    254          
+    255                  case BSP_INDICATE_ADVERTISING_SLOW:
+    256                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    257          
+    258                      // in advertising slowly blink LED_0
+    259                      if (LED_IS_ON(BSP_LED_0_MASK))
+    260                      {
+    261                          LEDS_OFF(BSP_LED_0_MASK);
+    262                          next_delay = indicate ==
+    263                                       BSP_INDICATE_ADVERTISING_SLOW ? ADVERTISING_SLOW_LED_OFF_INTERVAL :
+    264                                       ADVERTISING_SLOW_LED_OFF_INTERVAL;
+    265                      }
+    266                      else
+    267                      {
+    268                          LEDS_ON(BSP_LED_0_MASK);
+    269                          next_delay = indicate ==
+    270                                       BSP_INDICATE_ADVERTISING_SLOW ? ADVERTISING_SLOW_LED_ON_INTERVAL :
+    271                                       ADVERTISING_SLOW_LED_ON_INTERVAL;
+    272                      }
+    273                      m_stable_state = indicate;
+    274                      err_code       = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(next_delay), NULL);
+    275                      break;
+    276          
+    277                  case BSP_INDICATE_ADVERTISING_DIRECTED:
+    278                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    279          
+    280                      // in advertising very quickly blink LED_0
+    281                      if (LED_IS_ON(BSP_LED_0_MASK))
+    282                      {
+    283                          LEDS_OFF(BSP_LED_0_MASK);
+    284                          next_delay = indicate ==
+    285                                       BSP_INDICATE_ADVERTISING_DIRECTED ?
+    286                                       ADVERTISING_DIRECTED_LED_OFF_INTERVAL :
+    287                                       ADVERTISING_SLOW_LED_OFF_INTERVAL;
+    288                      }
+    289                      else
+    290                      {
+    291                          LEDS_ON(BSP_LED_0_MASK);
+    292                          next_delay = indicate ==
+    293                                       BSP_INDICATE_ADVERTISING_DIRECTED ?
+    294                                       ADVERTISING_DIRECTED_LED_ON_INTERVAL :
+    295                                       ADVERTISING_SLOW_LED_ON_INTERVAL;
+    296                      }
+    297                      m_stable_state = indicate;
+    298                      err_code       = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(next_delay), NULL);
+    299                      break;
+    300          
+    301                  case BSP_INDICATE_BONDING:
+    302                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    303          
+    304                      // in bonding fast blink LED_0
+    305                      if (LED_IS_ON(BSP_LED_0_MASK))
+    306                      {
+    307                          LEDS_OFF(BSP_LED_0_MASK);
+    308                      }
+    309                      else
+    310                      {
+    311                          LEDS_ON(BSP_LED_0_MASK);
+    312                      }
+    313          
+    314                      m_stable_state = indicate;
+    315                      err_code       =
+    316                          app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(BONDING_INTERVAL), NULL);
+    317                      break;
+    318          
+    319                  case BSP_INDICATE_CONNECTED:
+    320                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK & ~ALERT_LED_MASK);
+    321                      LEDS_ON(BSP_LED_0_MASK);
+    322                      m_stable_state = indicate;
+    323                      break;
+    324          
+    325                  case BSP_INDICATE_SENT_OK:
+    326                      // when sending shortly invert LED_1
+    327                      LEDS_INVERT(BSP_LED_1_MASK);
+    328                      err_code = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(SENT_OK_INTERVAL), NULL);
+    329                      break;
+    330          
+    331                  case BSP_INDICATE_SEND_ERROR:
+    332                      // on receving error invert LED_1 for long time
+    333                      LEDS_INVERT(BSP_LED_1_MASK);
+    334                      err_code = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(SEND_ERROR_INTERVAL), NULL);
+    335                      break;
+    336          
+    337                  case BSP_INDICATE_RCV_OK:
+    338                      // when receving shortly invert LED_1
+    339                      LEDS_INVERT(BSP_LED_1_MASK);
+    340                      err_code = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(RCV_OK_INTERVAL), NULL);
+    341                      break;
+    342          
+    343                  case BSP_INDICATE_RCV_ERROR:
+    344                      // on receving error invert LED_1 for long time
+    345                      LEDS_INVERT(BSP_LED_1_MASK);
+    346                      err_code = app_timer_start(m_leds_timer_id, BSP_MS_TO_TICK(RCV_ERROR_INTERVAL), NULL);
+    347                      break;
+    348          
+    349                  case BSP_INDICATE_FATAL_ERROR:
+    350                      // on fatal error turn on all leds
+    351                      LEDS_ON(LEDS_MASK);
+    352                      break;
+    353          
+    354                  case BSP_INDICATE_ALERT_0:
+    355                  case BSP_INDICATE_ALERT_1:
+    356                  case BSP_INDICATE_ALERT_2:
+    357                  case BSP_INDICATE_ALERT_3:
+    358                  case BSP_INDICATE_ALERT_OFF:
+    359                      err_code   = app_timer_stop(m_alert_timer_id);
+    360                      next_delay = (uint32_t)BSP_INDICATE_ALERT_OFF - (uint32_t)indicate;
+    361          
+    362                      // a little trick to find out that if it did not fall through ALERT_OFF
+    363                      if (next_delay && (err_code == NRF_SUCCESS))
+    364                      {
+    365                          if (next_delay > 1)
+    366                          {
+    367                              err_code = app_timer_start(m_alert_timer_id, BSP_MS_TO_TICK(
+    368                                                             (next_delay * ALERT_INTERVAL)), NULL);
+    369                          }
+    370                          LEDS_ON(ALERT_LED_MASK);
+    371                      }
+    372                      else
+    373                      {
+    374                          LEDS_OFF(ALERT_LED_MASK);
+    375                      }
+    376                      break;
+    377          
+    378                  case BSP_INDICATE_USER_STATE_OFF:
+    379                      LEDS_OFF(LEDS_MASK);
+    380                      m_stable_state = indicate;
+    381                      break;
+    382          
+    383                  case BSP_INDICATE_USER_STATE_0:
+    384                      LEDS_OFF(LEDS_MASK & ~BSP_LED_0_MASK);
+    385                      LEDS_ON(BSP_LED_0_MASK);
+    386                      m_stable_state = indicate;
+    387                      break;
+    388          
+    389                  case BSP_INDICATE_USER_STATE_1:
+    390                      LEDS_OFF(LEDS_MASK & ~BSP_LED_1_MASK);
+    391                      LEDS_ON(BSP_LED_1_MASK);
+    392                      m_stable_state = indicate;
+    393                      break;
+    394          
+    395                  case BSP_INDICATE_USER_STATE_2:
+    396                      LEDS_OFF(LEDS_MASK & ~(BSP_LED_0_MASK | BSP_LED_1_MASK));
+    397                      LEDS_ON(BSP_LED_0_MASK | BSP_LED_1_MASK);
+    398                      m_stable_state = indicate;
+    399                      break;
+    400          
+    401                  case BSP_INDICATE_USER_STATE_3:
+    402          
+    403                  case BSP_INDICATE_USER_STATE_ON:
+    404                      LEDS_ON(LEDS_MASK);
+    405                      m_stable_state = indicate;
+    406                      break;
+    407          
+    408                  default:
+    409                      break;
+    410              }
+    411          
+    412              return err_code;
+    413          }
+    414          
+    415          
+    416          /**@brief Handle events from leds timer.
+    417           *
+    418           * @note Timer handler does not support returning an error code.
+    419           * Errors from bsp_led_indication() are not propagated.
+    420           *
+    421           * @param[in]   p_context   parameter registered in timer start function.
+    422           */
+    423          static void leds_timer_handler(void * p_context)
+    424          {
+    425              UNUSED_PARAMETER(p_context);
+    426          
+    427              if (m_indication_type & BSP_INIT_LED)
+    428              {
+    429                  UNUSED_VARIABLE(bsp_led_indication(m_stable_state));
+    430              }
+    431          }
+    432          
+    433          
+    434          /**@brief Handle events from alert timer.
+    435           *
+    436           * @param[in]   p_context   parameter registered in timer start function.
+    437           */
+    438          static void alert_timer_handler(void * p_context)
+    439          {
+    440              UNUSED_PARAMETER(p_context);
+    441              LEDS_INVERT(ALERT_LED_MASK);
+    442          }
+    443          #endif // #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    444          
+    445          
+    446          /**@brief Configure indicators to required state.
+    447           */
+
+   \                                 In section .text, align 2, keep-with-next
+    448          uint32_t bsp_indication_set(bsp_indication_t indicate)
+    449          {
+   \                     bsp_indication_set: (+1)
+   \   00000000   0x0001             MOVS     R1,R0
+    450              uint32_t err_code = NRF_SUCCESS;
+   \   00000002   0x2000             MOVS     R0,#+0
+    451          
+    452          #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    453          
+    454              if (m_indication_type & BSP_INIT_LED)
+    455              {
+    456                  err_code = bsp_led_indication(indicate);
+    457              }
+    458          
+    459          #endif // LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    460              return err_code;
+   \   00000004   0x4770             BX       LR               ;; return
+    461          }
+    462          
+    463          
+
+   \                                 In section .text, align 2, keep-with-next
+    464          uint32_t bsp_indication_text_set(bsp_indication_t indicate, char const * p_text)
+    465          {
+   \                     bsp_indication_text_set: (+1)
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0005             MOVS     R5,R0
+   \   00000004   0x000C             MOVS     R4,R1
+    466              uint32_t err_code = bsp_indication_set(indicate);
+   \   00000006   0x0028             MOVS     R0,R5
+   \   00000008   0xB2C0             UXTB     R0,R0
+   \   0000000A   0x.... 0x....      BL       bsp_indication_set
+    467          
+    468          #ifdef BSP_UART_SUPPORT
+    469              printf("%s", p_text);
+    470          #endif // BSP_UART_SUPPORT
+    471          
+    472              return err_code;
+   \   0000000E   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    473          }
+    474          
+    475          
+
+   \                                 In section .text, align 2, keep-with-next
+    476          uint32_t bsp_init(uint32_t type, uint32_t ticks_per_100ms, bsp_event_callback_t callback)
+    477          {
+   \                     bsp_init: (+1)
+   \   00000000   0x0003             MOVS     R3,R0
+    478              uint32_t err_code = NRF_SUCCESS;
+   \   00000002   0x2000             MOVS     R0,#+0
+    479          
+    480          #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    481              m_app_ticks_per_100ms = ticks_per_100ms;
+    482              m_indication_type     = type;
+    483          #else
+    484              UNUSED_VARIABLE(ticks_per_100ms);
+    485          #endif // LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    486          
+    487          #if (BUTTONS_NUMBER > 0) && !(defined BSP_SIMPLE)
+    488              m_registered_callback = callback;
+    489          
+    490              // BSP will support buttons and generate events
+    491              if (type & BSP_INIT_BUTTONS)
+    492              {
+    493                  uint32_t cnt;
+    494          
+    495                  for (cnt = 0; ((cnt < BUTTONS_NUMBER) && (err_code == NRF_SUCCESS)); cnt++)
+    496                  {
+    497                      err_code = bsp_event_to_button_assign(cnt, (bsp_event_t)(BSP_EVENT_KEY_0 + cnt) );
+    498                  }
+    499                  APP_BUTTON_INIT((app_button_cfg_t *)app_buttons, BUTTONS_NUMBER, ticks_per_100ms / 2,
+    500                                  false);
+    501          
+    502                  if (err_code == NRF_SUCCESS)
+    503                  {
+    504                      err_code = app_button_enable();
+    505                  }
+    506              }
+    507          #elif (BUTTONS_NUMBER > 0) && (defined BSP_SIMPLE)
+    508          
+    509              if (type & BSP_INIT_BUTTONS)
+    510              {
+    511                  uint32_t cnt;
+    512                  uint32_t buttons[] = BUTTONS_LIST;
+    513          
+    514                  for (cnt = 0; cnt < BUTTONS_NUMBER; cnt++)
+    515                  {
+    516                      nrf_gpio_cfg_input(buttons[cnt], BUTTON_PULL);
+    517                  }
+    518              }
+    519          #endif // (BUTTONS_NUMBER > 0) && !(defined BSP_SIMPLE)
+    520          
+    521          #if LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    522          
+    523              if (type & BSP_INIT_LED)
+    524              {
+    525                  NRF_GPIO->DIRCLR = BUTTONS_MASK;
+    526                  LEDS_OFF(LEDS_MASK);
+    527                  NRF_GPIO->DIRSET = LEDS_MASK;
+    528              }
+    529          
+    530              // timers module must be already initialized!
+    531              if (err_code == NRF_SUCCESS)
+    532              {
+    533                  err_code =
+    534                      app_timer_create(&m_leds_timer_id, APP_TIMER_MODE_SINGLE_SHOT, leds_timer_handler);
+    535              }
+    536          
+    537              if (err_code == NRF_SUCCESS)
+    538              {
+    539                  err_code =
+    540                      app_timer_create(&m_alert_timer_id, APP_TIMER_MODE_REPEATED, alert_timer_handler);
+    541              }
+    542          #endif // LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
+    543          
+    544              return err_code;
+   \   00000004   0x4770             BX       LR               ;; return
+    545          }
+    546          
+    547          
+    548          #ifndef BSP_SIMPLE
+    549          /**@brief Assign specific event to button.
+    550           */
+
+   \                                 In section .text, align 2, keep-with-next
+    551          uint32_t bsp_event_to_button_assign(uint32_t button, bsp_event_t event)
+    552          {
+   \                     bsp_event_to_button_assign: (+1)
+   \   00000000   0x0002             MOVS     R2,R0
+    553              uint32_t err_code = NRF_SUCCESS;
+   \   00000002   0x2000             MOVS     R0,#+0
+    554          
+    555          #if BUTTONS_NUMBER > 0
+    556          
+    557              if (button < BUTTONS_NUMBER)
+    558              {
+    559                  m_events_list[button] = event;
+    560              }
+    561              else
+    562              {
+    563                  err_code = NRF_ERROR_INVALID_PARAM;
+    564              }
+    565          #else
+    566              err_code = NRF_ERROR_INVALID_PARAM;
+   \   00000004   0x2307             MOVS     R3,#+7
+   \   00000006   0x0018             MOVS     R0,R3
+    567          #endif // BUTTONS_NUMBER > 0
+    568          
+    569              return err_code;
+   \   00000008   0x4770             BX       LR               ;; return
+    570          }
+    571          #endif // BSP_SIMPLE
+    572          
+    573          
+    574          /**@brief Enable specified buttons (others are disabled).
+    575           */
+
+   \                                 In section .text, align 2, keep-with-next
+    576          uint32_t bsp_buttons_enable(uint32_t buttons)
+    577          {
+   \                     bsp_buttons_enable: (+1)
+   \   00000000   0x0001             MOVS     R1,R0
+    578              UNUSED_PARAMETER(buttons);
+    579          
+    580          #if BUTTONS_NUMBER > 0
+    581              uint32_t button_no;
+    582              uint32_t pin_no;
+    583          
+    584              for (button_no = 0; button_no < BUTTONS_NUMBER; button_no++)
+    585              {
+    586                  pin_no = m_buttons_list[button_no];
+    587          
+    588                  if (buttons & (1 << button_no))
+    589                  {
+    590                      NRF_GPIO->PIN_CNF[pin_no] &= ~GPIO_PIN_CNF_SENSE_Msk;
+    591                      NRF_GPIO->PIN_CNF[pin_no] |= GPIO_PIN_CNF_SENSE_Low << GPIO_PIN_CNF_SENSE_Pos;
+    592                  }
+    593                  else
+    594                  {
+    595                      NRF_GPIO->PIN_CNF[pin_no] &= ~GPIO_PIN_CNF_SENSE_Msk;
+    596                      NRF_GPIO->PIN_CNF[pin_no] |= GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos;
+    597                  }
+    598              }
+    599          #endif // BUTTONS_NUMBER > 0
+    600          
+    601              return NRF_SUCCESS;
+   \   00000002   0x2000             MOVS     R0,#+0
+   \   00000004   0x4770             BX       LR               ;; return
+    602          }
+    603          
+    604          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   bsp_button_is_pressed
+       0   bsp_buttons_enable
+       0   bsp_buttons_state_get
+       0   bsp_event_to_button_assign
+       0   bsp_indication_set
+      16   bsp_indication_text_set
+        16   -> bsp_indication_set
+       0   bsp_init
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       8  bsp_button_is_pressed
+       6  bsp_buttons_enable
+      10  bsp_buttons_state_get
+      10  bsp_event_to_button_assign
+       6  bsp_indication_set
+      16  bsp_indication_text_set
+       6  bsp_init
+
+ 
+ 62 bytes in section .text
+ 
+ 62 bytes of CODE memory
+
+Errors: none
+Warnings: none

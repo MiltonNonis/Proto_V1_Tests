@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>4130830654</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Debug\Obj\app_timer.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_soc.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_svc.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\softdevice_handler.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\app_timer.o</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_error_soc.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\spi_master.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+      <file>$PROJ_DIR$\..\devices\SensorUtils.c</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm0.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\app_timer.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\softdevice_handler.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf51_bitfields.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\compiler_abstraction.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\..\main.c</file>
+      <file>$PROJ_DIR$\bsp.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf51_deprecated.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.h</file>
+      <file>$PROJ_DIR$\collar_nRF51.icf</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_gpio.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\app_timer.h</file>
+      <file>$TOOLKIT_DIR$\lib\rt6M_tl.a</file>
+      <file>$PROJ_DIR$\Debug\List\nrf_delay.lst</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmFunc.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+      <file>$PROJ_DIR$\bsp.h</file>
+      <file>$PROJ_DIR$\..\collar_defines.h</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmInstr.h</file>
+      <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+      <file>$PROJ_DIR$\Debug\List\app_timer.lst</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\lib\m6M_tl.a</file>
+      <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\app_util.h</file>
+      <file>$TOOLKIT_DIR$\lib\dl6M_tln.a</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\scheduler\app_scheduler.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\Debug\List\bsp.lst</file>
+      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\spi_master.h</file>
+      <file>$PROJ_DIR$\..\devices\SensorUtils.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\spi_master_test.pbd</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\nordic_common.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\app_error.h</file>
+      <file>$PROJ_DIR$\Debug\List\softdevice_handler.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\SensorUtils.o</file>
+      <file>$PROJ_DIR$\Debug\List\main.lst</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_sdm.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\spi_master.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$PROJ_DIR$\Debug\List\SensorUtils.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\stddef.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf51.h</file>
+      <file>$PROJ_DIR$\..\system_nrf51.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\app_util_platform.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_error.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\softdevice_handler.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\nrf_delay.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\nrf_delay.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp.o</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\spi_5W_master.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\gpiote\app_gpiote.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\spi_master_test.out</file>
+      <file>$PROJ_DIR$\Debug\Obj\SensorUtils.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+      <file>$PROJ_DIR$\Debug\List\spi_master.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\spi_master.o</file>
+      <file>$PROJ_DIR$\Debug\Exe\spi_master_test.hex</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_gattc.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\ble_stack_handler_types.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\softdevice_handler.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_error_sdm.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_err.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_l2cap.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\ant_stack_handler_types.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_types.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\nrf_assert.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_gatt.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_gatts.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_ranges.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\ble_gap.h</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\spi_master.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 79 80</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7 27 16 13 6 17 49 40 31 1 67 35 63 26 78 18 20 11 46 64 8 42 3 53 2 48</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 53 7 27 17 40 11 46 18 20 78 67 26 63 13 35 8 42 31 64 16 1 2 6 49 3 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 72</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 30 71</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 17 11 16 13 27 20 31 38 48 18 46 35 19 39 40 63 23 64 7 8 42 32 24</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 32 27 17 40 11 46 18 20 48 39 19 38 63 13 7 35 8 42 31 64 16 23 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\devices\SensorUtils.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 77</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 60 55</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 67 20 27 48 3 8 74 11 17 35 7 18 46 70 32 16 13 31 42 68 50 39 40 63 34 64</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 32 27 17 40 11 46 18 20 48 39 68 70 67 74 7 3 50 63 13 35 8 42 31 64 16 34</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\app_timer.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 37 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 17 78 65 53 27 16 19 1 40 63 24 45 39 48 64 35 3 43 7 32 18 20 11 46 67 13 31 6 28 8 42 2 38 23</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 28 7 27 17 40 11 46 18 20 78 32 48 39 53 67 43 19 45 3 63 13 35 8 42 31 64 16 1 2 6 24 38 23 65</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\softdevice_handler.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 54 69</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52 17 6 7 43 27 2 53 94 1 89 48 18 13 42 16 67 95 90 92 3 91 87 57 45 83 40 20 11 46 63 85 64 35 31 8 78 19 84 88 82 93 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 84 3 27 17 40 11 46 18 20 48 52 57 2 63 13 7 35 8 42 31 64 1 78 16 6 67 85 53 45 43 19 83 87 94 90 95 88 86 92 82 93 89 91</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\main.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 66</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 56 59</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13 7 63 16 33 53 94 26 57 18 27 8 45 17 87 2 95 32 48 65 75 50 19 78 83 43 92 90 24 49 28 52 84 38 23 64 35 31 40 20 11 46 42 67 39 1 3 70 85 6 89 88 82 93 86 68 34</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 24 38 63 13 7 27 17 40 11 46 18 20 35 8 42 31 64 16 23 19 26 53 78 67 65 49 3 48 33 28 32 39 43 45 75 52 57 2 1 6 85 84 83 87 94 90 95 88 86 92 82 93 89 50 68 70 34</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\bsp.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 47 73</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 17 75 31 38 7 27 23 13 78 32 67 18 48 63 43 62 52 26 28 40 20 11 46 39 16 19 64 35 53 33 8 42 45</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 7 27 17 40 11 46 18 20 78 62 48 32 39 52 38 63 13 35 8 42 31 64 16 23 19 26 67 28 53 43 45 75</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 76</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\spi_master_test.out</name>
+      <outputs>
+        <tool>
+          <name>OBJCOPY</name>
+          <file> 81</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 25 5 73 59 71 55 69 80 36 29 41 44</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>ILINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

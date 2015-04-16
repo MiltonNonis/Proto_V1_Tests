@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>spi_master_test/Debug</Project><Project>spi_polling_test/Debug</Project></CurrentConfigs><CurrentProj>spi_polling_test</CurrentProj><OverviewSelected>1</OverviewSelected></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>545</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>674</ColumnWidth1><ColumnWidth2>331</ColumnWidth2><ColumnWidth3>64</ColumnWidth3></Build>
+    <TerminalIO/><Debug-Log><ColumnWidth0>19</ColumnWidth0><ColumnWidth1>1881</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-14611-27982</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>&lt;ws&gt;</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_master_test</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/App</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/Interfaces</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/Interfaces/spi</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/devices</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/drivers_nrf</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/drivers_nrf/hal</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/drivers_nrf/spi_master</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/libraries</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/libraries/timer</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/softdevice</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/softdevice/common</ExpandedNode><ExpandedNode>&lt;ws&gt;/spi_polling_test/nordic/components/softdevice/common/softdevice_handler</ExpandedNode><ExpandedNode>spi_master_test</ExpandedNode><ExpandedNode>spi_master_test/App</ExpandedNode><ExpandedNode>spi_master_test/devices</ExpandedNode><ExpandedNode>spi_master_test/nordic</ExpandedNode><ExpandedNode>spi_master_test/nordic/components</ExpandedNode><ExpandedNode>spi_master_test/nordic/components/libraries</ExpandedNode><ExpandedNode>spi_master_test/nordic/components/libraries/timer</ExpandedNode><ExpandedNode>spi_master_test/nordic/components/softdevice</ExpandedNode><ExpandedNode>spi_master_test/nordic/components/softdevice/common</ExpandedNode><ExpandedNode>spi_master_test/nordic/components/softdevice/common/softdevice_handler</ExpandedNode><ExpandedNode>spi_polling_test</ExpandedNode><ExpandedNode>spi_polling_test/App</ExpandedNode><ExpandedNode>spi_polling_test/Output</ExpandedNode><ExpandedNode>spi_polling_test/devices</ExpandedNode><ExpandedNode>spi_polling_test/nordic</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-29228-30983</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-10312-23378</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>1</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>1870</SelStart2><SelEnd2>1870</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\devices\SensorUtils.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>69</YPos2><SelStart2>6271</SelStart2><SelEnd2>6271</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\collar_defines.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>65</YPos2><SelStart2>4153</SelStart2><SelEnd2>4153</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\pca10028\bsp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>21</YPos2><SelStart2>443</SelStart2><SelEnd2>443</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\system_nrf51.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>7</YPos2><SelStart2>0</SelStart2><SelEnd2>0</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\spi_master.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>282</YPos2><SelStart2>12027</SelStart2><SelEnd2>12027</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\pca10028\bsp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>424</YPos2><SelStart2>14492</SelStart2><SelEnd2>14492</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\nrf_soc.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>401</YPos2><SelStart2>19547</SelStart2><SelEnd2>19556</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\softdevice_handler.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>197</YPos2><SelStart2>7941</SelStart2><SelEnd2>7941</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\devices\SensorUtils.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>18</YPos2><SelStart2>1734</SelStart2><SelEnd2>1751</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\examples\peripheral\spi_master\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>67</YPos2><SelStart2>3051</SelStart2><SelEnd2>3051</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_gpio.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>193</YPos2><SelStart2>10305</SelStart2><SelEnd2>10305</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>723</SelStart2><SelEnd2>723</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf_delay.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>290</SelStart2><SelEnd2>290</SelEnd2></Tab><ActiveTab>13</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\SPI_TESTS\SPI_POLLING\spi_master.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>65</YPos2><SelStart2>4595</SelStart2><SelEnd2>4595</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\SPI_TESTS\SPI_POLLING\collar_defines.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>73</YPos2><SelStart2>4533</SelStart2><SelEnd2>4533</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\SPI_TESTS\SPI_POLLING\spi_master.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>49</YPos2><SelStart2>4319</SelStart2><SelEnd2>4319</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\SPI_TESTS\SPI_POLLING\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>53</YPos2><SelStart2>3115</SelStart2><SelEnd2>3115</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\nrf51.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>474</YPos2><SelStart2>37578</SelStart2><SelEnd2>37578</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0454A6F0><key>iaridepm.enu1</key></Toolbar-0454A6F0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>1022</Bottom><Right>619</Right><x>-2</x><y>-2</y><xscreen>421</xscreen><yscreen>200</yscreen><sizeHorzCX>217122</sizeHorzCX><sizeHorzCY>152672</sizeHorzCY><sizeVertCX>320268</sizeVertCX><sizeVertCY>781679</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>243</Bottom><Right>1941</Right><x>-2</x><y>-2</y><xscreen>1943</xscreen><yscreen>245</yscreen><sizeHorzCX>1002063</sizeHorzCX><sizeHorzCY>187023</sizeHorzCY><sizeVertCX>217122</sizeVertCX><sizeVertCY>152672</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

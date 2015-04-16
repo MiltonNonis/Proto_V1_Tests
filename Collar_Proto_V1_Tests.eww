@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\examples\peripheral\spi_master\pca10028\spi_master_test.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\SPI_TESTS\SPI_POLLING\pca10028\spi_polling_test.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>
+
+

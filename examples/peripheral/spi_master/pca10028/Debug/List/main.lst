@@ -1,0 +1,918 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.30.4.8167/W32 for ARM        15/Apr/2015  14:53:33
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\main.c
+#    Command line =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\main.c
+#        -D NRF51 -D BOARD_PCA10028 -D BLE_STACK_SUPPORT_REQD -D S110 -D
+#        SPI_MASTER_0_ENABLE -D ACCELEROMETER_ENABLE -lCN
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\
+#        --diag_suppress Pe301,Pa082 -o
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M0 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\pca10028\
+#        -I
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\..\devices\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\hal\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\drivers_nrf\spi_master\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\gpiote\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\scheduler\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\timer\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\libraries\util\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\s110\headers\
+#        -I
+#        E:\Dev_Tools\NordicSemi\nRF51-DK\nRF51_SDK_7.2.0_cf547b5\components\softdevice\common\softdevice_handler\
+#        -I "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        7.0\arm\CMSIS\Include\" -On
+#    List file    =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\List\main.lst
+#    Object file  =  
+#        E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\pca10028\Debug\Obj\main.o
+#
+###############################################################################
+
+E:\Professional\Nuzzle\Collar\FW\Proto_V1_Tests\examples\peripheral\spi_master\main.c
+      1          /* Copyright (c) 2014 Nordic Semiconductor. All Rights Reserved.
+      2           *
+      3           * The information contained herein is property of Nordic Semiconductor ASA.
+      4           * Terms and conditions of usage are described in detail in NORDIC
+      5           * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+      6           *
+      7           * Licensees are granted free, non-transferable use of the information. NO
+      8           * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
+      9           * the file.
+     10           *
+     11           */
+     12          
+     13          /** @file
+     14          * @defgroup spi_master_example_main main.c
+     15          * @{
+     16          * @ingroup spi_master_example
+     17          *
+     18          * @brief SPI Master Loopback Example Application main file.
+     19          *
+     20          * This file contains the source code for a sample application using SPI.
+     21          *
+     22          */
+     23          
+     24          #include "nrf_delay.h"
+     25          #include "nrf_gpio.h"
+     26          #include "app_error.h"
+     27          #include "app_util_platform.h"
+     28          #include "spi_master.h"
+     29          #include "bsp.h"
+     30          #include "app_timer.h"
+     31          #include "app_gpiote.h"
+     32          #include "nordic_common.h"
+     33          #include "nrf_sdm.h"
+     34          #include "softdevice_handler.h"
+     35          
+     36          #include "SensorUtils.h"
+     37          
+     38          #define IS_SRVC_CHANGED_CHARACT_PRESENT     0     /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
+     39          
+     40          #define APP_TIMER_PRESCALER      0                      /**< Value of the RTC1 PRESCALER register. */
+     41          #define APP_TIMER_MAX_TIMERS     4      // BSP_APP_TIMERS_NUMBER  /**< Maximum number of simultaneously created timers. */
+     42          #define APP_TIMER_OP_QUEUE_SIZE  2                      /**< Size of timer operation queues. */
+     43          
+     44          #define DELAY_MS                 1000                   /**< Timer Delay in milli-seconds. */
+     45          
+     46          
+     47          // LIS3DS0 register info
+     48          #define LIS3DH_WHOAMI_REG			(0x0F)		// [R/O -0x33] identification reg
+     49          #define LIS3DH_WHOAMI_VAL  			(0x33)		// identification value
+     50          
+     51          // LIS3DH SPI flags for read/write and auto increment for multi-register reads
+     52          #define LIS3DH_SPI_READ_FLAG			(0x80)
+     53          #define LIS3DH_SPI_AUTO_INCREMENT_ADRR_FLAG	(0x40)
+     54          
+     55          
+     56          
+     57          /** @def  TX_RX_MSG_LENGTH
+     58           * number of bytes to transmit and receive. This amount of bytes will also be tested to see that
+     59           * the received bytes from slave are the same as the transmitted bytes from the master */
+     60          #define TX_RX_MSG_LENGTH         100
+     61          
+     62          #if defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE)
+     63          
+     64          typedef enum
+     65          {
+     66              TEST_STATE_SPI0_LSB,    /**< Test SPI0, bits order LSB */
+     67              TEST_STATE_SPI0_MSB,    /**< Test SPI0, bits order MSB */
+     68              TEST_STATE_SPI1_LSB,    /**< Test SPI1, bits order LSB */
+     69              TEST_STATE_SPI1_MSB     /**< Test SPI1, bits order MSB */
+     70          } spi_master_ex_state_t;
+     71          
+
+   \                                 In section .bss, align 4
+     72          static uint8_t m_tx_data_spi[TX_RX_MSG_LENGTH]; /**< SPI master TX buffer. */
+   \                     m_tx_data_spi:
+   \   00000000                      DS8 100
+
+   \                                 In section .bss, align 4
+     73          static uint8_t m_rx_data_spi[TX_RX_MSG_LENGTH]; /**< SPI master RX buffer. */
+   \                     m_rx_data_spi:
+   \   00000000                      DS8 100
+     74          
+
+   \                                 In section .data, align 1
+     75          static volatile bool m_transfer_completed = true;
+   \                     m_transfer_completed:
+   \   00000000   0x01               DC8 1
+     76          
+     77          #ifdef SPI_MASTER_0_ENABLE
+
+   \                                 In section .bss, align 1
+     78          static spi_master_ex_state_t m_spi_master_ex_state = TEST_STATE_SPI0_LSB;
+   \                     m_spi_master_ex_state:
+   \   00000000                      DS8 1
+     79          #else
+     80          static spi_master_ex_state_t m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+     81          #endif
+     82          
+     83          /**@brief Function for error handling, which is called when an error has occurred. 
+     84           *
+     85           * @param[in] error_code  Error code supplied to the handler.
+     86           * @param[in] line_num    Line number where the handler is called.
+     87           * @param[in] p_file_name Pointer to the file name. 
+     88           */
+
+   \                                 In section .text, align 2, keep-with-next
+     89          void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
+     90          {
+   \                     app_error_handler: (+1)
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     91              UNUSED_VARIABLE(bsp_indication_set(BSP_INDICATE_FATAL_ERROR));
+   \   00000008   0x200C             MOVS     R0,#+12
+   \   0000000A   0x.... 0x....      BL       bsp_indication_set
+     92          
+     93              for (;; )
+   \                     ??app_error_handler_0: (+1)
+   \   0000000E   0xE7FE             B        ??app_error_handler_0
+     94              {
+     95                  // No implementation needed.
+     96              }
+     97          }
+     98          
+     99          
+    100          #if 0
+    101          
+    102          /**@brief The function initializes TX buffer to values to be sent and clears RX buffer.
+    103           *
+    104           * @note Function initializes TX buffer to values from 0 to (len - 1).
+    105           *       and clears RX buffer (fill by 0).
+    106           *
+    107           * @param[out] p_tx_data    A pointer to a buffer TX.
+    108           * @param[out] p_rx_data    A pointer to a buffer RX.
+    109           * @param[in] len           A length of the data buffers.
+    110           */
+    111          static void init_buf(uint8_t * const p_tx_buf,
+    112                               uint8_t * const p_rx_buf,
+    113                               const uint16_t  len)
+    114          {
+    115              uint16_t i;
+    116          
+    117              for (i = 0; i < len; i++)
+    118              {
+    119                  p_tx_buf[i] = i;
+    120                  p_rx_buf[i] = 0;
+    121              }
+    122          }
+    123          #endif
+    124          
+    125          #if 0
+    126          /**@brief Function for checking if buffers are equal.
+    127           *
+    128           * @note Function compares each element of p_tx_buf with p_rx_buf.
+    129           *
+    130           * @param[in] p_tx_data     A pointer to a buffer TX.
+    131           * @param[in] p_rx_data     A pointer to a buffer RX.
+    132           * @param[in] len           A length of the data buffers.
+    133           *
+    134           * @retval true     Buffers are equal.
+    135           * @retval false    Buffers are different.
+    136           */
+    137          static bool check_buf_equal(const uint8_t * const p_tx_buf,
+    138                                      const uint8_t * const p_rx_buf,
+    139                                      const uint16_t        len)
+    140          {
+    141              uint16_t i;
+    142          
+    143              for (i = 0; i < len; i++)
+    144              {
+    145                  if (p_tx_buf[i] != p_rx_buf[i])
+    146                  {
+    147                      return false;
+    148                  }
+    149              }
+    150              return true;
+    151          }
+    152          #endif
+    153          
+    154          #ifdef SPI_MASTER_0_ENABLE
+    155          /**@brief Handler for SPI0 master events.
+    156           *
+    157           * @param[in] spi_master_evt    SPI master event.
+    158           */
+
+   \                                 In section .text, align 2, keep-with-next
+    159          void spi_master_0_event_handler(spi_master_evt_t spi_master_evt)
+    160          {
+   \                     spi_master_0_event_handler: (+1)
+   \   00000000   0xB531             PUSH     {R0,R4,R5,LR}
+    161              uint32_t err_code = NRF_SUCCESS;
+   \   00000002   0x2400             MOVS     R4,#+0
+    162              //bool result = false;
+    163          
+    164              switch (spi_master_evt.evt_type)
+   \   00000004   0x4668             MOV      R0,SP
+   \   00000006   0x7800             LDRB     R0,[R0, #+0]
+   \   00000008   0x2801             CMP      R0,#+1
+   \   0000000A   0xD112             BNE      ??spi_master_0_event_handler_0
+    165              {
+    166                  case SPI_MASTER_EVT_TRANSFER_COMPLETED:
+    167                      // Check if received data is correct.
+    168          //            result = check_buf_equal(m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+    169          //            APP_ERROR_CHECK_BOOL(result);
+    170          
+    171                      // Close SPI master.
+    172                      spi_master_close(SPI_MASTER_0);
+   \   0000000C   0x2000             MOVS     R0,#+0
+   \   0000000E   0x.... 0x....      BL       spi_master_close
+    173          
+    174                      err_code = bsp_indication_set(BSP_INDICATE_RCV_OK);
+   \   00000012   0x200A             MOVS     R0,#+10
+   \   00000014   0x.... 0x....      BL       bsp_indication_set
+   \   00000018   0x0004             MOVS     R4,R0
+    175                      APP_ERROR_CHECK(err_code);
+   \   0000001A   0x0025             MOVS     R5,R4
+   \   0000001C   0x2D00             CMP      R5,#+0
+   \   0000001E   0xD004             BEQ      ??spi_master_0_event_handler_1
+   \   00000020   0x2200             MOVS     R2,#+0
+   \   00000022   0x2100             MOVS     R1,#+0
+   \   00000024   0x0028             MOVS     R0,R5
+   \   00000026   0x.... 0x....      BL       app_error_handler
+    176          
+    177                      m_transfer_completed = true;
+   \                     ??spi_master_0_event_handler_1: (+1)
+   \   0000002A   0x2001             MOVS     R0,#+1
+   \   0000002C   0x....             LDR      R1,??DataTable5
+   \   0000002E   0x7008             STRB     R0,[R1, #+0]
+    178                      break;
+   \   00000030   0xE7FF             B        ??spi_master_0_event_handler_2
+    179          
+    180                  default:
+    181                      // No implementation needed.
+    182                      break;
+    183              }
+    184          }
+   \                     ??spi_master_0_event_handler_0: (+1)
+   \                     ??spi_master_0_event_handler_2: (+1)
+   \   00000032   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    185          #endif /* SPI_MASTER_0_ENABLE */
+    186          
+    187          
+    188          #ifdef SPI_MASTER_1_ENABLE
+    189          /**@brief Handler for SPI1 master events.
+    190           *
+    191           * @param[in] spi_master_evt    SPI master event.
+    192           */
+    193          void spi_master_1_event_handler(spi_master_evt_t spi_master_evt)
+    194          {
+    195              uint32_t err_code = NRF_SUCCESS;
+    196              bool result = false;
+    197          
+    198              switch (spi_master_evt.evt_type)
+    199              {
+    200                  case SPI_MASTER_EVT_TRANSFER_COMPLETED:
+    201                      // Check if received data is correct.
+    202                      result = check_buf_equal(m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+    203                      APP_ERROR_CHECK_BOOL(result);
+    204          
+    205                      // Close SPI master.
+    206                      spi_master_close(SPI_MASTER_1);
+    207          
+    208                      err_code = bsp_indication_set(BSP_INDICATE_RCV_OK);
+    209                      APP_ERROR_CHECK(err_code);
+    210          
+    211                      m_transfer_completed = true;
+    212                      break;
+    213          
+    214                  default:
+    215                      // No implementation needed.
+    216                      break;
+    217              }
+    218          }
+    219          #endif /* SPI_MASTER_1_ENABLE */
+    220          
+    221          
+    222          /**@brief Function for initializing a SPI master driver.
+    223           *
+    224           * @param[in] spi_master_instance       An instance of SPI master module.
+    225           * @param[in] spi_master_event_handler  An event handler for SPI master events.
+    226           * @param[in] lsb                       Bits order LSB if true, MSB if false.
+    227           */
+
+   \                                 In section .text, align 2, keep-with-next
+    228          static void spi_master_init(spi_master_hw_instance_t   spi_master_instance,
+    229                                      spi_master_event_handler_t spi_master_event_handler,
+    230                                      const bool                 lsb)
+    231          {
+   \                     spi_master_init: (+1)
+   \   00000000   0xB5F0             PUSH     {R4-R7,LR}
+   \   00000002   0xB089             SUB      SP,SP,#+36
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000F             MOVS     R7,R1
+   \   00000008   0x0016             MOVS     R6,R2
+    232              uint32_t err_code = NRF_SUCCESS;
+   \   0000000A   0x2500             MOVS     R5,#+0
+    233          
+    234              // Configure SPI master.
+    235              spi_master_config_t spi_config = ACCEL_SPI_MASTER_CONFIG;  //SPI_MASTER_INIT_DEFAULT;
+   \   0000000C   0xA801             ADD      R0,SP,#+4
+   \   0000000E   0x....             LDR      R1,??DataTable5_1
+   \   00000010   0x221C             MOVS     R2,#+28
+   \   00000012   0x.... 0x....      BL       __aeabi_memcpy4
+    236          
+    237              switch (spi_master_instance)
+   \   00000016   0xB2E4             UXTB     R4,R4
+   \   00000018   0x2C00             CMP      R4,#+0
+   \   0000001A   0xD0FF             BEQ      ??spi_master_init_0
+    238              {
+    239                  #ifdef SPI_MASTER_0_ENABLE
+    240                  case SPI_MASTER_0:
+    241                  {
+    242          //            spi_config = ACCEL_SPI_MASTER_CONFIG;
+    243          //            spi_config.SPI_Pin_SCK  = SPIM0_SCK_PIN;
+    244          //            spi_config.SPI_Pin_MISO = SPIM0_MISO_PIN;
+    245          //            spi_config.SPI_Pin_MOSI = SPIM0_MOSI_PIN;
+    246          //            spi_config.SPI_Pin_SS   = SPIM0_SS_PIN;
+    247                  }
+    248                  break;
+    249                  #endif /* SPI_MASTER_0_ENABLE */
+    250          
+    251                  #ifdef SPI_MASTER_1_ENABLE
+    252                  case SPI_MASTER_1:
+    253                  {
+    254                      spi_config.SPI_Pin_SCK  = SPIM1_SCK_PIN;
+    255                      spi_config.SPI_Pin_MISO = SPIM1_MISO_PIN;
+    256                      spi_config.SPI_Pin_MOSI = SPIM1_MOSI_PIN;
+    257                      spi_config.SPI_Pin_SS   = SPIM1_SS_PIN;
+    258                  }
+    259                  break;
+    260                  #endif /* SPI_MASTER_1_ENABLE */
+    261          
+    262                  default:
+    263                      break;
+    264              }
+    265          
+    266              spi_config.SPI_CONFIG_ORDER = (lsb ? SPI_CONFIG_ORDER_LsbFirst : SPI_CONFIG_ORDER_MsbFirst);
+   \                     ??spi_master_init_1: (+1)
+   \                     ??spi_master_init_0: (+1)
+   \   0000001C   0xB2F6             UXTB     R6,R6
+   \   0000001E   0x2E00             CMP      R6,#+0
+   \   00000020   0xD003             BEQ      ??spi_master_init_2
+   \   00000022   0x2001             MOVS     R0,#+1
+   \   00000024   0xA901             ADD      R1,SP,#+4
+   \   00000026   0x7608             STRB     R0,[R1, #+24]
+   \   00000028   0xE002             B        ??spi_master_init_3
+   \                     ??spi_master_init_2: (+1)
+   \   0000002A   0x2000             MOVS     R0,#+0
+   \   0000002C   0xA901             ADD      R1,SP,#+4
+   \   0000002E   0x7608             STRB     R0,[R1, #+24]
+    267          
+    268              err_code = spi_master_open(spi_master_instance, &spi_config);
+   \                     ??spi_master_init_3: (+1)
+   \   00000030   0xA901             ADD      R1,SP,#+4
+   \   00000032   0x0020             MOVS     R0,R4
+   \   00000034   0xB2C0             UXTB     R0,R0
+   \   00000036   0x.... 0x....      BL       spi_master_open
+   \   0000003A   0x0005             MOVS     R5,R0
+    269              APP_ERROR_CHECK(err_code);
+   \   0000003C   0x9500             STR      R5,[SP, #+0]
+   \   0000003E   0x9800             LDR      R0,[SP, #+0]
+   \   00000040   0x2800             CMP      R0,#+0
+   \   00000042   0xD004             BEQ      ??spi_master_init_4
+   \   00000044   0x2200             MOVS     R2,#+0
+   \   00000046   0x2100             MOVS     R1,#+0
+   \   00000048   0x9800             LDR      R0,[SP, #+0]
+   \   0000004A   0x.... 0x....      BL       app_error_handler
+    270          
+    271              // Register event handler for SPI master.
+    272              spi_master_evt_handler_reg(spi_master_instance, spi_master_event_handler);
+   \                     ??spi_master_init_4: (+1)
+   \   0000004E   0x0039             MOVS     R1,R7
+   \   00000050   0x0020             MOVS     R0,R4
+   \   00000052   0xB2C0             UXTB     R0,R0
+   \   00000054   0x.... 0x....      BL       spi_master_evt_handler_reg
+    273          }
+   \   00000058   0xB009             ADD      SP,SP,#+36
+   \   0000005A   0xBDF0             POP      {R4-R7,PC}       ;; return
+    274          
+    275          
+    276          /**@brief Function for sending and receiving data.
+    277           *
+    278           * @param[in]   spi_master_hw_instance  SPI master instance.
+    279           * @param[in]   p_tx_data               A pointer to a buffer TX.
+    280           * @param[out]  p_rx_data               A pointer to a buffer RX.
+    281           * @param[in]   len                     A length of the data buffers.
+    282           */
+
+   \                                 In section .text, align 2, keep-with-next
+    283          static void spi_send_recv(const spi_master_hw_instance_t spi_master_hw_instance,
+    284                                    uint8_t * const                p_tx_data,
+    285                                    uint8_t * const                p_rx_data,
+    286                                    const uint16_t                 len)
+    287          {
+   \                     spi_send_recv: (+1)
+   \   00000000   0xB5F1             PUSH     {R0,R4-R7,LR}
+   \   00000002   0xB082             SUB      SP,SP,#+8
+   \   00000004   0x000F             MOVS     R7,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x001C             MOVS     R4,R3
+    288              // Initalize buffers.
+    289          //    init_buf(p_tx_data, p_rx_data, len);
+    290          
+    291              // Start transfer.
+    292              uint32_t err_code =
+    293                  spi_master_send_recv(spi_master_hw_instance, p_tx_data, len, p_rx_data, len+1);
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x1C40             ADDS     R0,R0,#+1
+   \   0000000E   0xB280             UXTH     R0,R0
+   \   00000010   0x9000             STR      R0,[SP, #+0]
+   \   00000012   0x0033             MOVS     R3,R6
+   \   00000014   0x0022             MOVS     R2,R4
+   \   00000016   0xB292             UXTH     R2,R2
+   \   00000018   0x0039             MOVS     R1,R7
+   \   0000001A   0x4668             MOV      R0,SP
+   \   0000001C   0x7A00             LDRB     R0,[R0, #+8]
+   \   0000001E   0x.... 0x....      BL       spi_master_send_recv
+   \   00000022   0x0005             MOVS     R5,R0
+    294              APP_ERROR_CHECK(err_code);
+   \   00000024   0x9500             STR      R5,[SP, #+0]
+   \   00000026   0x9800             LDR      R0,[SP, #+0]
+   \   00000028   0x2800             CMP      R0,#+0
+   \   0000002A   0xD004             BEQ      ??spi_send_recv_0
+   \   0000002C   0x2200             MOVS     R2,#+0
+   \   0000002E   0x2100             MOVS     R1,#+0
+   \   00000030   0x9800             LDR      R0,[SP, #+0]
+   \   00000032   0x.... 0x....      BL       app_error_handler
+    295          }
+   \                     ??spi_send_recv_0: (+1)
+   \   00000036   0xBDF7             POP      {R0-R2,R4-R7,PC}  ;; return
+    296          
+    297          
+    298          /**@brief Function for executing and switching state.
+    299           *
+    300           */
+
+   \                                 In section .text, align 2, keep-with-next
+    301          static void switch_state(void)
+    302          {
+   \                     switch_state: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+    303              switch (m_spi_master_ex_state)
+   \   00000002   0x....             LDR      R0,??DataTable5_2
+   \   00000004   0x7800             LDRB     R0,[R0, #+0]
+   \   00000006   0x2800             CMP      R0,#+0
+   \   00000008   0xD002             BEQ      ??switch_state_0
+   \   0000000A   0x2801             CMP      R0,#+1
+   \   0000000C   0xD018             BEQ      ??switch_state_1
+   \   0000000E   0xE026             B        ??switch_state_2
+    304              {
+    305                  #ifdef SPI_MASTER_0_ENABLE
+    306                  case TEST_STATE_SPI0_LSB:
+    307                      spi_master_init(SPI_MASTER_0, spi_master_0_event_handler, true);
+   \                     ??switch_state_0: (+1)
+   \   00000010   0x2201             MOVS     R2,#+1
+   \   00000012   0x....             LDR      R1,??DataTable5_3
+   \   00000014   0x2000             MOVS     R0,#+0
+   \   00000016   0x.... 0x....      BL       spi_master_init
+    308          
+    309                      // Setup to read Accel Sensor WHO_AM_I register
+    310          //    AccelWriteBuff[0] = startReg | LIS3DH_SPI_READ_FLAG | 
+    311          //                        numRegs > 1 ? LIS3DH_SPI_AUTO_INCREMENT_ADRR_FLAG: 0x00;
+    312                      
+    313                      m_tx_data_spi[0] = (uint8_t)(LIS3DH_WHOAMI_REG | LIS3DH_SPI_READ_FLAG);
+   \   0000001A   0x208F             MOVS     R0,#+143
+   \   0000001C   0x....             LDR      R1,??DataTable5_4
+   \   0000001E   0x7008             STRB     R0,[R1, #+0]
+    314                      m_tx_data_spi[1] = 0x00;
+   \   00000020   0x2000             MOVS     R0,#+0
+   \   00000022   0x....             LDR      R1,??DataTable5_4
+   \   00000024   0x7048             STRB     R0,[R1, #+1]
+    315                      m_rx_data_spi[0] = 0x00;
+   \   00000026   0x2000             MOVS     R0,#+0
+   \   00000028   0x....             LDR      R1,??DataTable5_5
+   \   0000002A   0x7008             STRB     R0,[R1, #+0]
+    316                      m_rx_data_spi[1] = 0x00;
+   \   0000002C   0x2000             MOVS     R0,#+0
+   \   0000002E   0x....             LDR      R1,??DataTable5_5
+   \   00000030   0x7048             STRB     R0,[R1, #+1]
+    317                      spi_send_recv(SPI_MASTER_0, m_tx_data_spi, m_rx_data_spi, 1);
+   \   00000032   0x2301             MOVS     R3,#+1
+   \   00000034   0x....             LDR      R2,??DataTable5_5
+   \   00000036   0x....             LDR      R1,??DataTable5_4
+   \   00000038   0x2000             MOVS     R0,#+0
+   \   0000003A   0x.... 0x....      BL       spi_send_recv
+    318                      // spi_send_recv(SPI_MASTER_0, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+    319                      ////  m_spi_master_ex_state = TEST_STATE_SPI0_MSB;
+    320          
+    321                      break;
+   \   0000003E   0xE00E             B        ??switch_state_3
+    322          
+    323                  case TEST_STATE_SPI0_MSB:
+    324                      spi_master_init(SPI_MASTER_0, spi_master_0_event_handler, false);
+   \                     ??switch_state_1: (+1)
+   \   00000040   0x2200             MOVS     R2,#+0
+   \   00000042   0x....             LDR      R1,??DataTable5_3
+   \   00000044   0x2000             MOVS     R0,#+0
+   \   00000046   0x.... 0x....      BL       spi_master_init
+    325          
+    326                      spi_send_recv(SPI_MASTER_0, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+   \   0000004A   0x2364             MOVS     R3,#+100
+   \   0000004C   0x....             LDR      R2,??DataTable5_5
+   \   0000004E   0x....             LDR      R1,??DataTable5_4
+   \   00000050   0x2000             MOVS     R0,#+0
+   \   00000052   0x.... 0x....      BL       spi_send_recv
+    327          
+    328                      #ifdef SPI_MASTER_1_ENABLE
+    329                      m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+    330                      #else
+    331                      m_spi_master_ex_state = TEST_STATE_SPI0_LSB;
+   \   00000056   0x2000             MOVS     R0,#+0
+   \   00000058   0x....             LDR      R1,??DataTable5_2
+   \   0000005A   0x7008             STRB     R0,[R1, #+0]
+    332                      #endif /* SPI_MASTER_1_ENABLE */
+    333          
+    334                      break;
+   \   0000005C   0xE7FF             B        ??switch_state_3
+    335                  #endif /* SPI_MASTER_0_ENABLE */
+    336          
+    337                  #ifdef SPI_MASTER_1_ENABLE
+    338                  case TEST_STATE_SPI1_LSB:
+    339                      spi_master_init(SPI_MASTER_1, spi_master_1_event_handler, true);
+    340          
+    341                      spi_send_recv(SPI_MASTER_1, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+    342                      m_spi_master_ex_state = TEST_STATE_SPI1_MSB;
+    343          
+    344                      break;
+    345          
+    346                  case TEST_STATE_SPI1_MSB:
+    347                      spi_master_init(SPI_MASTER_1, spi_master_1_event_handler, false);
+    348          
+    349                      spi_send_recv(SPI_MASTER_1, m_tx_data_spi, m_rx_data_spi, TX_RX_MSG_LENGTH);
+    350          
+    351                      #ifdef SPI_MASTER_0_ENABLE
+    352                      m_spi_master_ex_state = TEST_STATE_SPI0_LSB;
+    353                      #else
+    354                      m_spi_master_ex_state = TEST_STATE_SPI1_LSB;
+    355                      #endif /* SPI_MASTER_0_ENABLE */
+    356          
+    357                      break;
+    358                  #endif /* SPI_MASTER_1_ENABLE */
+    359          
+    360                  default:
+    361                      break;
+    362              }
+    363          
+    364              nrf_delay_ms(DELAY_MS);
+   \                     ??switch_state_2: (+1)
+   \                     ??switch_state_3: (+1)
+   \   0000005E   0x20FA             MOVS     R0,#+250
+   \   00000060   0x0080             LSLS     R0,R0,#+2        ;; #+1000
+   \   00000062   0x.... 0x....      BL       nrf_delay_ms
+    365          }
+   \   00000066   0xBD01             POP      {R0,PC}          ;; return
+    366          
+    367          
+    368          #endif /* defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE) */
+    369          
+    370          /**@brief Function for initializing bsp module.
+    371           */
+
+   \                                 In section .text, align 2, keep-with-next
+    372          void bsp_configuration()
+    373          {
+   \                     bsp_configuration: (+1)
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0xB082             SUB      SP,SP,#+8
+    374              uint32_t err_code = NRF_SUCCESS;
+   \   00000004   0x2400             MOVS     R4,#+0
+    375          #if 0
+    376              NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+    377              NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
+    378              NRF_CLOCK->TASKS_LFCLKSTART    = 1;
+    379          
+    380              while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
+    381              {
+    382                  // Do nothing.
+    383              }
+    384          #endif        
+    385              APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
+   \   00000006   0x2000             MOVS     R0,#+0
+   \   00000008   0x9000             STR      R0,[SP, #+0]
+   \   0000000A   0x....             LDR      R3,??DataTable5_6
+   \   0000000C   0x2203             MOVS     R2,#+3
+   \   0000000E   0x2104             MOVS     R1,#+4
+   \   00000010   0x2000             MOVS     R0,#+0
+   \   00000012   0x.... 0x....      BL       app_timer_init
+   \   00000016   0x0006             MOVS     R6,R0
+   \   00000018   0x0035             MOVS     R5,R6
+   \   0000001A   0x2D00             CMP      R5,#+0
+   \   0000001C   0xD004             BEQ      ??bsp_configuration_0
+   \   0000001E   0x2200             MOVS     R2,#+0
+   \   00000020   0x2100             MOVS     R1,#+0
+   \   00000022   0x0028             MOVS     R0,R5
+   \   00000024   0x.... 0x....      BL       app_error_handler
+    386                  
+    387              err_code = bsp_init(BSP_INIT_LED, APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), NULL);
+   \                     ??bsp_configuration_0: (+1)
+   \   00000028   0x2200             MOVS     R2,#+0
+   \   0000002A   0x....             LDR      R1,??DataTable5_7  ;; 0xccd
+   \   0000002C   0x2001             MOVS     R0,#+1
+   \   0000002E   0x.... 0x....      BL       bsp_init
+   \   00000032   0x0004             MOVS     R4,R0
+    388              APP_ERROR_CHECK(err_code);
+   \   00000034   0x0025             MOVS     R5,R4
+   \   00000036   0x2D00             CMP      R5,#+0
+   \   00000038   0xD004             BEQ      ??bsp_configuration_1
+   \   0000003A   0x2200             MOVS     R2,#+0
+   \   0000003C   0x2100             MOVS     R1,#+0
+   \   0000003E   0x0028             MOVS     R0,R5
+   \   00000040   0x.... 0x....      BL       app_error_handler
+    389          }
+   \                     ??bsp_configuration_1: (+1)
+   \   00000044   0xBD73             POP      {R0,R1,R4-R6,PC}  ;; return
+
+   \                                 In section .bss, align 4
+   \                     ??APP_TIMER_BUF:
+   \   00000000                      DS8 472
+    390          
+    391          /**@brief Function for initializing the BLE stack.
+    392           *
+    393           * @details Initializes the SoftDevice and the BLE event interrupt.
+    394           */
+
+   \                                 In section .text, align 2, keep-with-next
+    395          void ble_stack_init(void)
+    396          {
+   \                     ble_stack_init: (+1)
+   \   00000000   0xB5F0             PUSH     {R4-R7,LR}
+   \   00000002   0xB083             SUB      SP,SP,#+12
+    397              uint32_t err_code;
+    398          
+    399              // Initialize the SoftDevice handler module.
+    400              SOFTDEVICE_HANDLER_INIT(NRF_CLOCK_LFCLKSRC_XTAL_20_PPM, false);
+   \   00000004   0x2300             MOVS     R3,#+0
+   \   00000006   0x2250             MOVS     R2,#+80
+   \   00000008   0x....             LDR      R1,??DataTable5_8
+   \   0000000A   0x2008             MOVS     R0,#+8
+   \   0000000C   0x.... 0x....      BL       softdevice_handler_init
+   \   00000010   0x0005             MOVS     R5,R0
+   \   00000012   0x002C             MOVS     R4,R5
+   \   00000014   0x2C00             CMP      R4,#+0
+   \   00000016   0xD004             BEQ      ??ble_stack_init_0
+   \   00000018   0x2200             MOVS     R2,#+0
+   \   0000001A   0x2100             MOVS     R1,#+0
+   \   0000001C   0x0020             MOVS     R0,R4
+   \   0000001E   0x.... 0x....      BL       app_error_handler
+    401          
+    402          #ifdef S110
+    403              // Enable BLE stack 
+    404              ble_enable_params_t ble_enable_params;
+    405              memset(&ble_enable_params, 0, sizeof(ble_enable_params));
+   \                     ??ble_stack_init_0: (+1)
+   \   00000022   0x2601             MOVS     R6,#+1
+   \   00000024   0x2700             MOVS     R7,#+0
+   \   00000026   0x466C             MOV      R4,SP
+   \   00000028   0x003A             MOVS     R2,R7
+   \   0000002A   0x0031             MOVS     R1,R6
+   \   0000002C   0x0020             MOVS     R0,R4
+   \   0000002E   0x.... 0x....      BL       __aeabi_memset
+    406              ble_enable_params.gatts_enable_params.service_changed = IS_SRVC_CHANGED_CHARACT_PRESENT;
+   \   00000032   0x4668             MOV      R0,SP
+   \   00000034   0x7800             LDRB     R0,[R0, #+0]
+   \   00000036   0x21FE             MOVS     R1,#+254
+   \   00000038   0x4001             ANDS     R1,R1,R0
+   \   0000003A   0x4668             MOV      R0,SP
+   \   0000003C   0x7001             STRB     R1,[R0, #+0]
+    407              err_code = sd_ble_enable(&ble_enable_params);
+   \   0000003E   0x4668             MOV      R0,SP
+   \   00000040   0xDF60             SVC      0x60
+   \   00000042   0x9001             STR      R0,[SP, #+4]
+    408              APP_ERROR_CHECK(err_code);
+   \   00000044   0x9801             LDR      R0,[SP, #+4]
+   \   00000046   0x0004             MOVS     R4,R0
+   \   00000048   0x2C00             CMP      R4,#+0
+   \   0000004A   0xD004             BEQ      ??ble_stack_init_1
+   \   0000004C   0x2200             MOVS     R2,#+0
+   \   0000004E   0x2100             MOVS     R1,#+0
+   \   00000050   0x0020             MOVS     R0,R4
+   \   00000052   0x.... 0x....      BL       app_error_handler
+    409          #endif
+    410          
+    411          #if 0    
+    412              // Register with the SoftDevice handler module for BLE events.
+    413              err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
+    414              APP_ERROR_CHECK(err_code);
+    415          
+    416              // Register with the SoftDevice handler module for BLE events.
+    417              err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
+    418              APP_ERROR_CHECK(err_code);
+    419          #endif    
+    420          }
+   \                     ??ble_stack_init_1: (+1)
+   \   00000056   0xBDF7             POP      {R0-R2,R4-R7,PC}  ;; return
+
+   \                                 In section .bss, align 4
+   \                     ??BLE_EVT_BUFFER:
+   \   00000000                      DS8 80
+    421          
+    422          
+    423          /** @brief Function for main application entry.
+    424           */
+
+   \                                 In section .text, align 2, keep-with-next
+    425          int main(void)
+    426          {
+   \                     main: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+    427              // Initialize this first beore any sd calls (including interrupts)
+    428              ble_stack_init();
+   \   00000002   0x.... 0x....      BL       ble_stack_init
+    429            
+    430              // Setup bsp module.
+    431              bsp_configuration();
+   \   00000006   0x.... 0x....      BL       bsp_configuration
+    432          
+    433              for (;; )
+    434              {
+    435                  #if defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE)
+    436                  if (m_transfer_completed)
+   \                     ??main_0: (+1)
+   \   0000000A   0x....             LDR      R0,??DataTable5
+   \   0000000C   0x7800             LDRB     R0,[R0, #+0]
+   \   0000000E   0x2800             CMP      R0,#+0
+   \   00000010   0xD0FB             BEQ      ??main_0
+    437                  {
+    438                      m_transfer_completed = false;
+   \   00000012   0x2000             MOVS     R0,#+0
+   \   00000014   0x....             LDR      R1,??DataTable5
+   \   00000016   0x7008             STRB     R0,[R1, #+0]
+    439                      switch_state();
+   \   00000018   0x.... 0x....      BL       switch_state
+   \   0000001C   0xE7F5             B        ??main_0
+    440                  }
+    441                  #endif // defined(SPI_MASTER_0_ENABLE) || defined(SPI_MASTER_1_ENABLE)
+    442              }
+    443          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5:
+   \   00000000   0x........         DC32     m_transfer_completed
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_1:
+   \   00000000   0x........         DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_2:
+   \   00000000   0x........         DC32     m_spi_master_ex_state
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_3:
+   \   00000000   0x........         DC32     spi_master_0_event_handler
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_4:
+   \   00000000   0x........         DC32     m_tx_data_spi
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_5:
+   \   00000000   0x........         DC32     m_rx_data_spi
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_6:
+   \   00000000   0x........         DC32     ??APP_TIMER_BUF
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_7:
+   \   00000000   0x00000CCD         DC32     0xccd
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_8:
+   \   00000000   0x........         DC32     ??BLE_EVT_BUFFER
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \   00000000   0x10000000         DC32 268435456, 1, 3, 2, 4, 0
+   \              0x00000001   
+   \              0x00000003   
+   \              0x00000002   
+   \              0x00000004   
+   \              0x00000000   
+   \   00000018   0x00 0x00          DC8 0, 0, 0, 0
+   \              0x00 0x00    
+    444          
+    445          
+    446          /** @} */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   app_error_handler
+        16   -> bsp_indication_set
+      32   ble_stack_init
+        32   -> __aeabi_memset
+        32   -> app_error_handler
+        32   -> softdevice_handler_init
+      24   bsp_configuration
+        24   -> app_error_handler
+        24   -> app_timer_init
+        24   -> bsp_init
+       8   main
+         8   -> ble_stack_init
+         8   -> bsp_configuration
+         8   -> switch_state
+      16   spi_master_0_event_handler
+        16   -> app_error_handler
+        16   -> bsp_indication_set
+        16   -> spi_master_close
+      56   spi_master_init
+        56   -> __aeabi_memcpy4
+        56   -> app_error_handler
+        56   -> spi_master_evt_handler_reg
+        56   -> spi_master_open
+      32   spi_send_recv
+        32   -> app_error_handler
+        32   -> spi_master_send_recv
+       8   switch_state
+         8   -> nrf_delay_ms
+         8   -> spi_master_init
+         8   -> spi_send_recv
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_2
+       4  ??DataTable5_3
+       4  ??DataTable5_4
+       4  ??DataTable5_5
+       4  ??DataTable5_6
+       4  ??DataTable5_7
+       4  ??DataTable5_8
+      28  ?_0
+     472  APP_TIMER_BUF
+      80  BLE_EVT_BUFFER
+      16  app_error_handler
+      88  ble_stack_init
+      70  bsp_configuration
+     100  m_rx_data_spi
+       1  m_spi_master_ex_state
+       1  m_transfer_completed
+     100  m_tx_data_spi
+      30  main
+      52  spi_master_0_event_handler
+      92  spi_master_init
+      56  spi_send_recv
+     104  switch_state
+
+ 
+ 753 bytes in section .bss
+   1 byte  in section .data
+  28 bytes in section .rodata
+ 544 bytes in section .text
+ 
+ 544 bytes of CODE  memory
+  28 bytes of CONST memory
+ 754 bytes of DATA  memory
+
+Errors: none
+Warnings: none
